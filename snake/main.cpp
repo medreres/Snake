@@ -19,6 +19,7 @@
 #include <vector>
 #include "ResourcePath.hpp"
 #include <iostream>
+#include <cmath>
 using namespace sf;
 using namespace std;
 const int height = 600;
@@ -26,17 +27,17 @@ const int width = 900;
 const int loop_pause = 130;
 void if_eat(RectangleShape& player,RectangleShape& fruit,RectangleShape& tail,vector<RectangleShape>& tails)
 {
-    if(player.getPosition()==fruit.getPosition())
+    if(abs(player.getPosition().x - fruit.getPosition().x)<40 && abs(player.getPosition().y-fruit.getPosition().y)<40)
     {
         tail.setPosition(player.getPosition());
         tails.push_back(tail);
-        fruit.setPosition(rand()%(width/20), rand()%(height/20));
+        fruit.setPosition(rand()%(width/40)*40, rand()%(height/40)*40);
         cout << fruit.getPosition().x << " " << fruit.getPosition().y << endl;
     }
 }
 int main(int, char const**)
 {
-    srand(time(NULL));
+    //srand(time(NULL));
     // Create the main window
     sf::RenderWindow window(sf::VideoMode(width, height), "Snake");
     // Set the Icon
@@ -52,21 +53,21 @@ int main(int, char const**)
     //player
     sf::RectangleShape player (sf::Vector2f(40,40));
     player.setFillColor(Color(70,115,232));
-    player.setPosition(width/2,height/2);
-    player.setOrigin(player.getSize().x/2, player.getSize().y/2);
+    player.setPosition(rand()%(width/40)*40, rand()%(height/40)*40);
+    //player.setOrigin(player.getSize().x/2, player.getSize().y/2);
     //body
     RectangleShape tail (sf::Vector2f(40,40));
     tail.setFillColor(Color(70,115,232));
     //tail.setPosition(player.getPosition().x, player.getPosition().y+player.getSize().y);
-    tail.setOrigin(player.getSize().x/2, player.getSize().y/2);
+    //tail.setOrigin(player.getSize().x/2, player.getSize().y/2);
     vector<RectangleShape> tails;
     int last = tails.size()-1;
     
     
     //fruit
-    RectangleShape fruit(sf::Vector2f(40,40));
+    RectangleShape fruit(sf::Vector2f(50,50));
     fruit.setFillColor(Color(231, 71, 29));
-    fruit.setOrigin(player.getSize().x/2, player.getSize().y/2);
+    //fruit.setOrigin(player.getSize().x/2, player.getSize().y/2);
     fruit.setPosition(width/2+40, height/2+40);
     
     // Start the game loop
