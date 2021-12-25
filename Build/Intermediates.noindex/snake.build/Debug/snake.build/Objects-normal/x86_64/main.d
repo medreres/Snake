@@ -1,4 +1,4 @@
-dependencies: /Users/medreres/Desktop/snake/snake/main.cpp \
+dependencies: /Users/medreres/Documents/GitHub/Snake/snake/main.cpp \
   /usr/local/include/SFML/Audio.hpp /usr/local/include/SFML/System.hpp \
   /usr/local/include/SFML/Config.hpp \
   /usr/local/include/SFML/System/Clock.hpp \
@@ -89,4 +89,4 @@ dependencies: /Users/medreres/Desktop/snake/snake/main.cpp \
   /usr/local/include/SFML/Graphics/Sprite.hpp \
   /usr/local/include/SFML/Graphics/Text.hpp \
   /usr/local/include/SFML/Graphics/VertexBuffer.hpp \
-  /Users/medreres/Desktop/snake/snake/ResourcePath.hpp
+  /Users/medreres/Documents/GitHub/Snake/snake/ResourcePath.hpp

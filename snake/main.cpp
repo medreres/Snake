@@ -22,7 +22,7 @@
 using namespace sf;
 using namespace std;
 const int height = 600;
-const int width = 800;
+const int width = 900;
 const int loop_pause = 130;
 void if_eat(RectangleShape& player,RectangleShape& fruit,RectangleShape& tail,vector<RectangleShape>& tails)
 {

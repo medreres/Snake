@@ -1,0 +1,58 @@
+{
+  "_buildCommand2" : {
+    "command" : "build",
+    "skipDependencies" : false,
+    "style" : "buildAndRun"
+  },
+  "buildCommand" : "build",
+  "configuredTargets" : [
+    {
+      "guid" : "cb0d6353dfdf417260c4299acf64fb538a6139065dd1238741cd2a0c72e6d426"
+    }
+  ],
+  "containerPath" : "/Users/medreres/Documents/GitHub/Snake/snake.xcodeproj",
+  "continueBuildingAfterErrors" : false,
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "activeArchitecture" : "x86_64",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : false,
+      "platform" : "macosx",
+      "sdk" : "macosx12.1",
+      "sdkVariant" : "macos",
+      "supportedArchitectures" : [
+        "arm64e",
+        "arm64",
+        "x86_64"
+      ],
+      "targetArchitecture" : "x86_64"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "/Users/medreres/Documents/GitHub/Snake/Build/Intermediates.noindex",
+      "buildProductsPath" : "/Users/medreres/Documents/GitHub/Snake/Build/Products",
+      "derivedDataPath" : "/Users/medreres/Library/Developer/Xcode/DerivedData",
+      "indexDataStoreFolderPath" : "/Users/medreres/Library/Developer/Xcode/DerivedData/snake-fcjvhcacxxyijnefrymdeazbnivv/Index/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/medreres/Library/Developer/Xcode/DerivedData/snake-fcjvhcacxxyijnefrymdeazbnivv/Index/PrecompiledHeaders",
+      "pchPath" : "/Users/medreres/Documents/GitHub/Snake/Build/Intermediates.noindex/PrecompiledHeaders"
+    },
+    "configurationName" : "Debug",
+    "overrides" : {
+      "synthesized" : {
+        "table" : {
+          "ENABLE_PREVIEWS" : "NO"
+        }
+      }
+    }
+  },
+  "schemeCommand" : "launch",
+  "schemeCommand2" : "launch",
+  "shouldCollectMetrics" : false,
+  "showNonLoggedProgress" : true,
+  "useDryRun" : false,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}
