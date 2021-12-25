@@ -22,17 +22,42 @@
 #include <cmath>
 using namespace sf;
 using namespace std;
-const int height = 600;
-const int width = 900;
-const int loop_pause = 130;
+const int height = 768;
+const int width = 1366;
+int loop_pause = 130;
+int Score = 0;
+bool loose = 0;
+bool if_collapse(RectangleShape& player,RectangleShape& fruit)
+{
+    if(abs(player.getPosition().x - fruit.getPosition().x)<(player.getSize().x+fruit.getSize().x)/2 && abs(player.getPosition().y-fruit.getPosition().y)<(player.getSize().y+fruit.getSize().y)/2)
+    {
+        return 1;
+    }
+    else return 0;
+    
+}
+bool if_collapse(RectangleShape& player,vector<RectangleShape>& tails)
+{
+    for (int i = 0; i < tails.size(); i++) {
+        if(player.getPosition() == tails[i].getPosition())
+        {
+            return 1;
+        }
+       
+    }
+    return 0;
+    
+}
 void if_eat(RectangleShape& player,RectangleShape& fruit,RectangleShape& tail,vector<RectangleShape>& tails)
 {
-    if(abs(player.getPosition().x - fruit.getPosition().x)<40 && abs(player.getPosition().y-fruit.getPosition().y)<40)
+    if(if_collapse(player,fruit))
     {
         tail.setPosition(player.getPosition());
         tails.push_back(tail);
-        fruit.setPosition(rand()%(width/40)*40, rand()%(height/40)*40);
-        cout << fruit.getPosition().x << " " << fruit.getPosition().y << endl;
+        fruit.setPosition(rand()%(width/50)*50, rand()%(height/50)*50);
+        loop_pause = (loop_pause<100)? loop_pause-1:loop_pause-3;
+        Score+=10;
+        //cout << fruit.getPosition().x << " " << fruit.getPosition().y << endl;
     }
 }
 int main(int, char const**)
@@ -45,6 +70,25 @@ int main(int, char const**)
     if (!icon.loadFromFile(resourcePath() + "icon.png")) {
         return EXIT_FAILURE;
     }
+    Font font;
+    if(!font.loadFromFile(resourcePath()+"sansation.ttf"))
+    {
+        return EXIT_FAILURE;
+    }
+    Text text,score;
+    text.setFont(font);
+    text.setString("You loose!");
+    text.setCharacterSize(128);
+    text.setPosition(width/2-text.getLocalBounds().width/2   , height/2-text.getLocalBounds().height/2-100);
+    
+    
+    
+    
+    
+    
+    
+    
+    
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     
     //physics
@@ -73,7 +117,7 @@ int main(int, char const**)
     // Start the game loop
     while (window.isOpen())
     {
-       
+        
         sleep(Time(milliseconds(loop_pause)));
         // Process events
         sf::Event event;
@@ -115,9 +159,10 @@ int main(int, char const**)
                 direcion = 3;
             }
         }
-        
+        if(!loose){
         //moving player
         if_eat(player, fruit, tail, tails);
+        
         if(last<0 && tails.size()!=0)
         {
             last = tails.size()-1;
@@ -159,18 +204,35 @@ int main(int, char const**)
         {
             player.setPosition(player.getPosition().x, height);
         }
-       //earing fruit
-        
-        // Clear screen
-        window.clear(Color(170, 215, 81));
-        window.draw(fruit);
-        window.draw(player);
-        for (int i  = 0; i<tails.size(); i++)
+        if(if_collapse(player, tails)&&!loose)
         {
-            window.draw(tails[i]);
+            direcion = -1;
+            loose = 1;
+            string temp;
+            temp = "Your score : ";
+            temp.append(to_string(Score));
+            score = text;
+            score.setString(temp);
+            score.setPosition(width/2 - score.getLocalBounds().width/2,height/2-score.getLocalBounds().height/2);
+            
         }
-        // Update the window
-        window.display();
+        // Clear screen
+            window.clear(Color(170, 215, 81));
+            window.draw(fruit);
+            window.draw(player);
+            for (int i  = 0; i<tails.size(); i++)
+            {
+                window.draw(tails[i]);
+            }
+            if(loose)
+            {
+                window.draw(text);
+                window.draw(score);
+            }
+            // Update the window
+            window.display();
+        }
+        
     }
 
     return EXIT_SUCCESS;
