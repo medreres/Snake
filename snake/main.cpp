@@ -43,7 +43,7 @@ bool if_collapse(RectangleShape& player,vector<RectangleShape>& tails)
         {
             return 1;
         }
-       
+        
     }
     return 0;
     
@@ -160,63 +160,63 @@ int main(int, char const**)
             }
         }
         if(!loose){
-        //moving player
-        if_eat(player, fruit, tail, tails);
-        
-        if(last<0 && tails.size()!=0)
-        {
-            last = tails.size()-1;
-        }
-        if(tails.size()!=0)
-        {
-            tails[last--].setPosition(player.getPosition());
-        }
-        switch(direcion)
-        {
-            case 0:
-                player.move(0, -player.getSize().y);
-                break;
-            case 1:
-                player.move(0, player.getSize().y);
-                break;
-            case 2:
-                player.move(player.getSize().x,0);
-                break;
-            case 3:
-                player.move(-player.getSize().x,0);
-                break;
-            default:
-                break;
-        }
-        if(player.getPosition().x<0)
-        {
-            player.setPosition(width, player.getPosition().y);
-        }
-        if(player.getPosition().x>width)
-        {
-            player.setPosition(0, player.getPosition().y);
-        }
-        if(player.getPosition().y>height)
-        {
-            player.setPosition(player.getPosition().x, 0);
-        }
-        if(player.getPosition().y<0)
-        {
-            player.setPosition(player.getPosition().x, height);
-        }
-        if(if_collapse(player, tails)&&!loose)
-        {
-            direcion = -1;
-            loose = 1;
-            string temp;
-            temp = "Your score : ";
-            temp.append(to_string(Score));
-            score = text;
-            score.setString(temp);
-            score.setPosition(width/2 - score.getLocalBounds().width/2,height/2-score.getLocalBounds().height/2);
+            //moving player
+            if_eat(player, fruit, tail, tails);
             
-        }
-        // Clear screen
+            if(last<0 && tails.size()!=0)
+            {
+                last = tails.size()-1;
+            }
+            if(tails.size()!=0)
+            {
+                tails[last--].setPosition(player.getPosition());
+            }
+            switch(direcion)
+            {
+                case 0:
+                    player.move(0, -player.getSize().y);
+                    break;
+                case 1:
+                    player.move(0, player.getSize().y);
+                    break;
+                case 2:
+                    player.move(player.getSize().x,0);
+                    break;
+                case 3:
+                    player.move(-player.getSize().x,0);
+                    break;
+                default:
+                    break;
+            }
+            if(player.getPosition().x<0)
+            {
+                player.setPosition(width, player.getPosition().y);
+            }
+            if(player.getPosition().x>width)
+            {
+                player.setPosition(0, player.getPosition().y);
+            }
+            if(player.getPosition().y>height)
+            {
+                player.setPosition(player.getPosition().x, 0);
+            }
+            if(player.getPosition().y<0)
+            {
+                player.setPosition(player.getPosition().x, height);
+            }
+            if(if_collapse(player, tails)&&!loose)
+            {
+                direcion = -1;
+                loose = 1;
+                string temp;
+                temp = "Your score : ";
+                temp.append(to_string(Score));
+                score = text;
+                score.setString(temp);
+                score.setPosition(width/2 - score.getLocalBounds().width/2,height/2-score.getLocalBounds().height/2);
+                
+            }
+            // Clear screen
             window.clear(Color(170, 215, 81));
             window.draw(fruit);
             window.draw(player);
@@ -229,11 +229,11 @@ int main(int, char const**)
                 window.draw(text);
                 window.draw(score);
             }
-            // Update the window
+            //             Update the window
             window.display();
         }
         
     }
-
+    
     return EXIT_SUCCESS;
 }
