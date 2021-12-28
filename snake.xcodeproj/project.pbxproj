@@ -285,7 +285,7 @@
 				EXCLUDED_ARCHS = arm64;
 				INFOPLIST_FILE = "snake/snake-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
 				PRODUCT_BUNDLE_IDENTIFIER = xcode.snake;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -300,7 +300,7 @@
 				EXCLUDED_ARCHS = arm64;
 				INFOPLIST_FILE = "snake/snake-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
 				PRODUCT_BUNDLE_IDENTIFIER = xcode.snake;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

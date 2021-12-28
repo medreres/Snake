@@ -27,6 +27,62 @@ const int width = 1366;
 int loop_pause = 130;
 int Score = 0;
 bool loose = 0;
+enum buttonStates {BTN_IDLE = 0,BTN_HOVER,BTN_PRESSED};
+class Button
+{
+    
+public:
+    Button(string t,Font& font)
+    {
+        text.setString(t);
+        text.setFillColor(Color::White);
+        text.setCharacterSize(128);
+        text.setFont(font);
+        
+        shape.setSize(Vector2f(text.getLocalBounds().width,text.getLocalBounds().height));
+        shape.setFillColor(Color::Blue);
+    }
+    void setTextColor(Color color)
+    {
+        text.setFillColor(color);
+    }
+    void setPosition(Vector2f pos)
+    {
+        shape.setPosition(pos);
+        float xPos = pos.x+shape.getLocalBounds().width/2 - text.getLocalBounds().width/2-10;
+        float yPos = pos.y+shape.getLocalBounds().height/2 - text.getLocalBounds().height/2-40;
+        text.setPosition(xPos, yPos);
+    }
+    void drawTo(RenderWindow &window)
+    {
+       // window.draw(shape);
+        window.draw(text);
+        
+    }
+    bool isMouserOver(RenderWindow &window)
+    {
+        float mouseX = Mouse::getPosition(window).x;
+        float mouseY = Mouse::getPosition(window).y;
+        
+        float btnPosX = shape.getPosition().x;
+        float btnPosY = shape.getPosition().y;
+        
+        float btnPosWidth = btnPosX + shape.getLocalBounds().width;
+        float btnPosHeight = btnPosY + shape.getLocalBounds().height;
+        
+        if(mouseX < btnPosWidth && mouseX > btnPosX && mouseY<btnPosHeight && mouseY>btnPosY)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    
+    RectangleShape shape;
+    Text text;
+};
 bool if_collapse(RectangleShape& player,RectangleShape& fruit)
 {
     if(abs(player.getPosition().x - fruit.getPosition().x)<(player.getSize().x+fruit.getSize().x)/2 && abs(player.getPosition().y-fruit.getPosition().y)<(player.getSize().y+fruit.getSize().y)/2)
@@ -62,7 +118,7 @@ void if_eat(RectangleShape& player,RectangleShape& fruit,RectangleShape& tail,ve
 }
 int main(int, char const**)
 {
-    //srand(time(NULL));
+    srand(time(NULL));
     // Create the main window
     sf::RenderWindow window(sf::VideoMode(width, height), "Snake");
     // Set the Icon
@@ -75,17 +131,18 @@ int main(int, char const**)
     {
         return EXIT_FAILURE;
     }
+    
     Text text,score;
     text.setFont(font);
     text.setString("You loose!");
     text.setCharacterSize(128);
-    text.setPosition(width/2-text.getLocalBounds().width/2   , height/2-text.getLocalBounds().height/2-100);
+    text.setPosition(width/2-text.getLocalBounds().width/2   , height/2-text.getLocalBounds().height/2-128);
     
     
     
-    
-    
-    
+    //Button
+    Button button("Restart",font);
+    button.setPosition(Vector2f(width/2-button.shape.getLocalBounds().width/2,height/2+128));
     
     
     
@@ -94,11 +151,15 @@ int main(int, char const**)
     //physics
     int direcion = -1;//0 upwards1 downwards,3 right,4 left
     Clock clock;
+    
+    
     //player
     sf::RectangleShape player (sf::Vector2f(40,40));
     player.setFillColor(Color(70,115,232));
     player.setPosition(rand()%(width/40)*40, rand()%(height/40)*40);
     //player.setOrigin(player.getSize().x/2, player.getSize().y/2);
+    
+    
     //body
     RectangleShape tail (sf::Vector2f(40,40));
     tail.setFillColor(Color(70,115,232));
@@ -121,6 +182,7 @@ int main(int, char const**)
         sleep(Time(milliseconds(loop_pause)));
         // Process events
         sf::Event event;
+        
         while (window.pollEvent(event))
         {
             Time elapsed = clock.getElapsedTime();
@@ -137,6 +199,29 @@ int main(int, char const**)
             // Escape pressed: exit
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
                 window.close();
+            }
+            if(event.type == Event::MouseMoved)
+            {
+                if(button.isMouserOver(window))
+                {
+                    button.setTextColor(Color::Red);
+                }
+                else
+                {
+                    button.setTextColor(Color::White);
+                }
+            }
+            if( (event.type == Event::MouseButtonPressed && button.isMouserOver(window))   //if loose
+               || (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::Enter))
+            {
+                loose = 0;
+                direcion = -1;
+                tails.clear();
+                Score = 0;
+                player.setPosition(rand()%(width/40)*40, rand()%(height/40)*40);
+                fruit.setPosition(rand()%(width/50)*50, rand()%(height/50)*50);
+                loop_pause = 130;
+                last = tails.size()-1;
             }
             if(event.type == Event::KeyPressed && event.key.code ==
                Keyboard::W)
@@ -158,11 +243,11 @@ int main(int, char const**)
             {
                 direcion = 3;
             }
-        }
-        if(!loose){
+        } //processing physics
+        if(!loose)
+        {
             //moving player
             if_eat(player, fruit, tail, tails);
-            
             if(last<0 && tails.size()!=0)
             {
                 last = tails.size()-1;
@@ -216,22 +301,24 @@ int main(int, char const**)
                 score.setPosition(width/2 - score.getLocalBounds().width/2,height/2-score.getLocalBounds().height/2);
                 
             }
-            // Clear screen
-            window.clear(Color(170, 215, 81));
-            window.draw(fruit);
-            window.draw(player);
-            for (int i  = 0; i<tails.size(); i++)
-            {
-                window.draw(tails[i]);
-            }
-            if(loose)
-            {
-                window.draw(text);
-                window.draw(score);
-            }
-            //             Update the window
-            window.display();
         }
+        // Clear screen
+        window.clear(Color(170, 215, 81));
+        window.draw(fruit);
+        window.draw(player);
+        for (int i  = 0; i<tails.size(); i++)
+        {
+            window.draw(tails[i]);
+        }
+        if(loose)
+        {
+            window.draw(text);
+            window.draw(score);
+            button.drawTo(window);
+        }
+        //             Update the window
+        window.display();
+        
         
     }
     
