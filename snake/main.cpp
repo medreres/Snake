@@ -27,12 +27,13 @@ const int width = 1366;
 int loop_pause = 130;
 int Score = 0;
 bool loose = 0;
+bool pause = 0;
 enum buttonStates {BTN_IDLE = 0,BTN_HOVER,BTN_PRESSED};
 class Button
 {
     
 public:
-    Button(string t,Font& font)
+    Button(string t,Font& font,int size = 128)
     {
         text.setString(t);
         text.setFillColor(Color::White);
@@ -55,7 +56,6 @@ public:
     }
     void drawTo(RenderWindow &window)
     {
-       // window.draw(shape);
         window.draw(text);
         
     }
@@ -113,9 +113,19 @@ void if_eat(RectangleShape& player,RectangleShape& fruit,RectangleShape& tail,ve
         fruit.setPosition(rand()%(width/50)*50, rand()%(height/50)*50);
         loop_pause = (loop_pause<100)? loop_pause-1:loop_pause-3;
         Score+=10;
-        //cout << fruit.getPosition().x << " " << fruit.getPosition().y << endl;
     }
 }
+static void showLooseScreen(int &direcion, sf::Text &score, const sf::Text &text) {
+    direcion = -1;
+    loose = 1;
+    string temp;
+    temp = "Your score : ";
+    temp.append(to_string(Score));
+    score = text;
+    score.setString(temp);
+    score.setPosition(width/2 - score.getLocalBounds().width/2,height/2-score.getLocalBounds().height/2);
+}
+
 int main(int, char const**)
 {
     srand(time(NULL));
@@ -157,27 +167,25 @@ int main(int, char const**)
     sf::RectangleShape player (sf::Vector2f(40,40));
     player.setFillColor(Color(70,115,232));
     player.setPosition(rand()%(width/40)*40, rand()%(height/40)*40);
-    //player.setOrigin(player.getSize().x/2, player.getSize().y/2);
     
     
     //body
     RectangleShape tail (sf::Vector2f(40,40));
     tail.setFillColor(Color(70,115,232));
-    //tail.setPosition(player.getPosition().x, player.getPosition().y+player.getSize().y);
-    //tail.setOrigin(player.getSize().x/2, player.getSize().y/2);
     vector<RectangleShape> tails;
     int last = tails.size()-1;
+    
     
     
     //fruit
     RectangleShape fruit(sf::Vector2f(50,50));
     fruit.setFillColor(Color(231, 71, 29));
-    //fruit.setOrigin(player.getSize().x/2, player.getSize().y/2);
     fruit.setPosition(width/2+40, height/2+40);
     
     // Start the game loop
     while (window.isOpen())
     {
+        Vector2f temp_only; // for snake with 10 scores
         
         sleep(Time(milliseconds(loop_pause)));
         // Process events
@@ -186,19 +194,19 @@ int main(int, char const**)
         while (window.pollEvent(event))
         {
             Time elapsed = clock.getElapsedTime();
-            if(event.type == Event::KeyPressed && event.key.code ==
-               Keyboard::H)
-            {
-                tail.setPosition(player.getPosition());
-                tails.push_back(tail);
-            }
+//            if(event.type == Event::KeyPressed && event.key.code ==  //for test
+//               Keyboard::H)
+//            {
+//                tail.setPosition(player.getPosition());
+//                tails.push_back(tail);
+//            }
             // Close window: exit
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
             // Escape pressed: exit
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
-                window.close();
+                pause = 1;
             }
             if(event.type == Event::MouseMoved)
             {
@@ -254,12 +262,14 @@ int main(int, char const**)
             }
             if(tails.size()!=0)
             {
+                temp_only = tails[last].getPosition();
                 tails[last--].setPosition(player.getPosition());
             }
             switch(direcion)
             {
                 case 0:
                     player.move(0, -player.getSize().y);
+                    
                     break;
                 case 1:
                     player.move(0, player.getSize().y);
@@ -273,33 +283,17 @@ int main(int, char const**)
                 default:
                     break;
             }
-            if(player.getPosition().x<0)
+            if(player.getPosition() == temp_only)
             {
-                player.setPosition(width, player.getPosition().y);
+                showLooseScreen(direcion, score, text);
             }
-            if(player.getPosition().x>width)
+            if(player.getPosition().x<0 || player.getPosition().x>width || player.getPosition().y>height || player.getPosition().y<0)
             {
-                player.setPosition(0, player.getPosition().y);
-            }
-            if(player.getPosition().y>height)
-            {
-                player.setPosition(player.getPosition().x, 0);
-            }
-            if(player.getPosition().y<0)
-            {
-                player.setPosition(player.getPosition().x, height);
+                showLooseScreen(direcion, score, text);
             }
             if(if_collapse(player, tails)&&!loose)
             {
-                direcion = -1;
-                loose = 1;
-                string temp;
-                temp = "Your score : ";
-                temp.append(to_string(Score));
-                score = text;
-                score.setString(temp);
-                score.setPosition(width/2 - score.getLocalBounds().width/2,height/2-score.getLocalBounds().height/2);
-                
+                showLooseScreen(direcion, score, text);
             }
         }
         // Clear screen
