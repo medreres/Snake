@@ -191,21 +191,24 @@ int main(int, char const**)
     // Start the game loop
     while (window.isOpen())
     {
-        Vector2f temp_only; // for snake with 10 scores
         
+        Vector2f temp_only; // for snake with 10 scores
         sleep(Time(milliseconds(loop_pause)));
+        Time elapsed = clock.getElapsedTime();
+        
+        
         // Process events
         sf::Event event;
         
         while (window.pollEvent(event))
         {
-            Time elapsed = clock.getElapsedTime();
+            
             // Close window: exit
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
             // Escape pressed: exit
-            if(event.type == Event::MouseMoved){
+            if(event.type == Event::MouseMoved){ // restart
                 if(button.isMouserOver(window))
                 {
                     button.setTextColor(Color::Red);
@@ -264,6 +267,8 @@ int main(int, char const**)
                 last = tails.size()-1;
                 
             }
+            
+            
             if(event.type == Event::KeyPressed && event.key.code ==
                Keyboard::W) {
                 direcion = 0;
@@ -281,6 +286,7 @@ int main(int, char const**)
                 direcion = 3;
             }
         } //processing physics
+        
         if(!(loose || pause)){
             //moving player
             if_eat(player, fruit, tail, tails);
@@ -325,6 +331,7 @@ int main(int, char const**)
             }
         }
         // Clear screen
+        
         window.clear(Color(170, 215, 81));
         window.draw(fruit);
         window.draw(player);
